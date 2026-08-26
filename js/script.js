@@ -113,3 +113,34 @@ function raf(time) {
 }
 
 requestAnimationFrame(raf);
+
+// EmailJS Form Handling
+const contactForm = document.getElementById('contact-form');
+if (contactForm) {
+    contactForm.addEventListener('submit', function (event) {
+        event.preventDefault();
+        
+        const submitBtn = document.getElementById('submit-btn');
+        const originalText = submitBtn.innerHTML;
+        
+        submitBtn.innerHTML = 'Sending...';
+        submitBtn.disabled = true;
+
+        emailjs.sendForm('fwbcontact', 'fwbmails', this)
+            .then(() => {
+                submitBtn.innerHTML = 'Sent Successfully! <span class="arrow">✓</span>';
+                contactForm.reset();
+                setTimeout(() => {
+                    submitBtn.innerHTML = originalText;
+                    submitBtn.disabled = false;
+                }, 3000);
+            }, (error) => {
+                console.error('EmailJS Error:', error);
+                submitBtn.innerHTML = 'Failed to Send <span class="arrow">✕</span>';
+                setTimeout(() => {
+                    submitBtn.innerHTML = originalText;
+                    submitBtn.disabled = false;
+                }, 3000);
+            });
+    });
+}
